@@ -14,11 +14,9 @@ export default function NavbarBootstrap() {
      <div>
 
 <Navbar.Brand href="#home">
-      <Nav.Link href="/">
         <div id="logo">
           <img id="logoImg" src="logoRadar.png" alt="" />
         </div>
-      </Nav.Link>
     </Navbar.Brand>
 </div>  
      
