@@ -57,8 +57,8 @@ function App() {
   const valueLabelFormat = (value) => {
     const diff = months - value;
     const date = new Date()
-    date.setMonth(date.getMonth() - diff)
-    return `${date.getMonth() + 1}/${date.getFullYear()}`;
+    date.setMonth(date.getMonth() - diff - 1)
+    return `${date.getMonth()}/${date.getFullYear()}`;
   };
 
   useEffect(() => {
