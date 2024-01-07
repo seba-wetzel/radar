@@ -79,7 +79,7 @@ export default function Map() {
                     {...mapProps}
                     {...mapHandlers}
                 >
-                    {/* Capa interactiva para provincias */ console.debug(filters, mapHandlers, markers)}
+                    {/* Capa interactiva para provincias */ }
 
                     <ProvSource data={provincias} style={style.provincias} />
                     <DepsSource data={departamentos} style={style.departamentos} />
