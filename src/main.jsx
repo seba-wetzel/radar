@@ -7,6 +7,7 @@ import {
   RouterProvider,
 } from "react-router-dom";
 import "./index.css";
+import "./App.css";
 
 import Main2 from "./components/Main2.jsx";
 import Conecta from "./components/Conecta.jsx";
@@ -16,16 +17,19 @@ import Reporta from "./components/reporta.jsx";
 
 import Root from "./routes/Root.jsx";
 
-const App = lazy(() => import("./App"))
+const App = lazy(() => import("./routes/App"))
+const Map = lazy(() => import("./components/Map"))
 
-const loader = async () => ({
-  urls: await getURLs({
-    departamentos: "data/mapsData/departamentos-argentina.json",
-    departamentosBsAs: "data/mapsData/departamentos-buenos_aires.json",
-    provincias: "data/mapsData/provincias.json",
-    rutas: "data/mapsData/rutas.json",
-    casos: "data/casos.json"
-  }),
+const loader = urls => async () => ({
+  urls: await getURLs(urls),
+})
+
+const appLoader = loader({casos: "data/casos.json"});
+const mapLoader = loader({
+  departamentos: "data/mapsData/departamentos-argentina.json",
+  departamentosBsAs: "data/mapsData/departamentos-buenos_aires.json",
+  provincias: "data/mapsData/provincias.json",
+  rutas: "data/mapsData/rutas.json",
 })
 
 const router = createHashRouter([
@@ -33,7 +37,9 @@ const router = createHashRouter([
     path: "/",
     element: <Root/>,
     children:[
-      { path:"/", element:<App/>, loader},
+      { path:"/", element:<App/>, loader: appLoader, children: [
+        { path:"/", element:<Map/>, loader: mapLoader}
+      ]},
       { path:"/conecta", element:< Conecta/> },
       { path:"/reporta", element:< Reporta/> },
       { path:"/notas", element:< Notas/> },
