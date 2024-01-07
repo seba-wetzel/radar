@@ -10,28 +10,20 @@ import Navbar from 'react-bootstrap/Navbar';
 export default function NavbarBootstrap() {
   return (
     <div className="heading">
-     
-     <div>
 
-<Navbar.Brand href="#home">
-        <div id="logo">
-          <img id="logoImg" src="logoRadar.png" alt="" />
-        </div>
-    </Navbar.Brand>
-</div>  
-     
-     
-     
+      <div>
+        <Navbar.Brand href="/">
+          <div id="logo">
+            <img id="logoImg" src="logoRadar.png" alt="" />
+          </div>
+        </Navbar.Brand>
+      </div>
+
       <div id="menuPCBox">
-
-   
-
         <Navbar  bg="blue" data-bs-theme="blue">
           <Container>
-            
             <Nav className="me-auto">
               <div id="menuPC">
-
                 <Nav.Link to="./notas" as={Link} className="d-none d-lg-block"> <h6 className='BotonesNavPc'>INVESTIGACIONES</h6> </Nav.Link>
                 <Nav.Link to="./conecta" as={Link} className="d-none d-lg-block"><h6 className='BotonesNavPc'>NOSOTRXS</h6></Nav.Link>
               </div>
@@ -47,7 +39,9 @@ export default function NavbarBootstrap() {
 
       <div id="botonMenu">
 
-        <ScrollLink to="main2-content"><img id="menuImg" src="menu.png" alt="" /></ScrollLink>
+        <ScrollLink to="main2-content">
+          <img id="menuImg" src="menu.png" alt="" />
+        </ScrollLink>
 
       </div>
     </div>
