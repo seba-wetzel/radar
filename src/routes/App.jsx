@@ -7,7 +7,6 @@ import AppContext from "../contexts/AppContext.jsx";
 import { Link as ScrollLink, animateScroll as scroll } from "react-scroll";
 import { motion } from 'framer-motion';
 import CloseButton from 'react-bootstrap/CloseButton';
-import Footer from "./components/footer.jsx"
 
 import Main2 from "../components/Main2.jsx";
 import Popup from "../components/Popup.jsx";
@@ -205,7 +204,6 @@ function App() {
 
         {popupInfo && <Popup {...popupInfo} />}
 
-      <Footer />
         <Main2 />
         <Analisis {...analisisData}/>
       </div>
