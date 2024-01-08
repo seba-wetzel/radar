@@ -21,12 +21,7 @@ import Root from "./routes/Root.jsx";
 const App = lazy(() => import("./routes/App"))
 const Map = lazy(() => import("./components/Map"))
 
-const loader = urls => async () => ({
-  urls: await getURLs(urls),
-})
-
-const appLoader = loader({casos: "data/casos.json"});
-const mapLoader = loader({
+const mapLoader = async () => getURLs({
   departamentos: "data/mapsData/departamentos-argentina.json",
   departamentosBsAs: "data/mapsData/departamentos-buenos_aires.json",
   provincias: "data/mapsData/provincias.json",

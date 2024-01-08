@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Slider } from "@mui/material";
-import { useLoaderData, Outlet } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 import AppContext from "../contexts/AppContext.jsx";
+import {json} from "../components/Loader.jsx";
 
 import { Link as ScrollLink, animateScroll as scroll } from "react-scroll";
 import { motion } from 'framer-motion';
@@ -18,9 +19,30 @@ const now = new Date()
 
 const emptyFilters = {byId: {}, byName: {}};
 
-function App() {
-  const {urls} = useLoaderData();
 
+function App() {
+  const [casos, setCasos] = useState({});
+  const [analisisData, setAnalisisData] = useState({
+    min: now,
+    max: now,
+    tipos: emptyFilters,
+    componentes: emptyFilters
+  })
+
+  useEffect(() => {
+    json("data/casos.json").then(setCasos);
+  }, [])
+
+  return (
+    <div className="App">
+      <AppView casos={casos} setAnalisisData={setAnalisisData}/>
+      <Main2 />
+      <Analisis {...analisisData} />
+    </div>
+  )
+}
+
+function AppView({casos, setAnalisisData}) {
   const handleTipoFilter = () => {
     const filteredDataByType = filteredDataByTime.filter(event => tipoFilters[event.tipoId]);
     setFilteredData(filteredDataByType);
@@ -34,13 +56,6 @@ function App() {
   });
   // Estado para controlar la visibilidad de "Filtros"
   const [casesData, setCasesData] = useState([]);
-  const [analisisData, setAnalisisData] = useState({
-    min: now,
-    max: now,
-    tipos: emptyFilters,
-    componentes: emptyFilters
-  });
-
   const [filtrosVisible, setFiltrosVisible] = useState(true);
 
   const [hoveredFeatureId, setHoveredFeatureId] = useState(null);
@@ -61,21 +76,21 @@ function App() {
   };
 
   useEffect(() => {
-    const {tipos, componentes} = urls.casos;
-    const cases = urls.casos.cases.map(c => ({...c, date: new Date(c.date)}));
-    const max = new Date(urls.casos.max)
-    const min = new Date(urls.casos.min)
+    const {tipos, componentes, cases} = casos
+    if (! (tipos && componentes && cases)) return
+    const max = new Date(casos.max)
+    const min = new Date(casos.min)
     const yearsDiff = max.getFullYear() - min.getFullYear();
     const monthDiff = max.getMonth() - min.getMonth();
 
     const totalMonths = yearsDiff * 12 + monthDiff + 1;
 
-    setCasesData(cases);
+    setCasesData(cases.map(c => ({...c, date: new Date(c.date)})));
     setAnalisisData({tipos, componentes, min, max, total: cases.length})
     setDates({min, max});
     setMonths(totalMonths);
     setMonthRange([0, totalMonths]);
-  }, [])
+  }, [casos])
 
   useEffect(() => setFilteredData(casesData), [casesData])
 
@@ -124,89 +139,83 @@ function App() {
 
   return (
     <AppContext.Provider
-    value={{
-      filters: {tipo: {handle: handleTipoFilter, set: setTipoFilters, data: tipoFilters}},
-      mapHandlers: {onHover: handleHover, onLeave: handleLeave},
-      markers: {data: filteredData, setPopupInfo, setMarker: setHoveredMarkerId, selected: hoveredMarkerId}
-    }}
+      value={{
+        filters: {tipo: {handle: handleTipoFilter, set: setTipoFilters, data: tipoFilters}},
+        mapHandlers: {onHover: handleHover, onLeave: handleLeave},
+        markers: {data: filteredData, setPopupInfo, setMarker: setHoveredMarkerId, selected: hoveredMarkerId}
+      }}
     >
-    <div className="App">
-
-    {filtrosVisible && (
-      <Filtros
-        caseCount={filteredData.length}
-        handleTipoFilter={handleTipoFilter}
-        tipoFilters={tipoFilters}
-        setTipoFilters={setTipoFilters}
-      >
-      </Filtros>
-    )}
-        <div id='mapGap'></div>
-        <div id='botonFiltrosMain'>
-          {/* Render different button content based on the state */}
-          <CloseButton
-            id="closeButton"
-            aria-label="Hide"
-            onClick={() => { handleClickCloseButton(); toggleFiltrosVisibility(); }}
-            className={isCloseButtonClicked ? "transformed-button" : "simple-button"}
-          >
-            {isCloseButtonClicked ? (
-              // Content when the button is clicked
-              // You can use any JSX or HTML here
-              <div><h5 id= 'botonFiltrosMap'>FILTROS</h5></div>
-            ) : (
-              // Content when the button is not clicked
-              // You can use any JSX or HTML here
-              <div>X</div>
-            )}
-          </CloseButton>
-        </div>
-        <div id='mapGap'></div>
-
-        <Outlet />
-        <div className="slider-container">
-          {/* Agrega un botón o elemento para cambiar la visibilidad de Filtros */}
-          <Slider
-            max={months}
-            valueLabelDisplay="auto"
-            value={monthRange}
-            step={1}
-            getAriaValueText={valueLabelFormat}
-            valueLabelFormat={valueLabelFormat}
-            onChange={handleChange}
-            aria-labelledby="non-linear-slider"
-          />
-          <div id='referenciasFechas'>
-            <div>
-              <h6 id='fechaInicio'>
-                {dates.min.getMonth()}/{dates.min.getFullYear()}
-              </h6>
-            </div>
-            <div>  </div>
-            <div>
-              <h6 id='fechaCierre'>
-                {dates.max.getMonth()}/{dates.max.getFullYear()}
-              </h6>
-            </div>
-          </div>
-        </div>
-        <ScrollLink id='toMain2Container'
-                    to="Main2"             // ID del elemento de destino (Main2)
-                    spy={true}             // Activa el modo espía
-                    smooth={true}          // Activa el desplazamiento suave
-                    duration={500}         // Duración de la animación (en milisegundos)
-                    offset={-70} // Ajusta un offset opcional (si tienes un encabezado fijo)
+      {filtrosVisible && (
+        <Filtros
+          caseCount={filteredData.length}
+          handleTipoFilter={handleTipoFilter}
+          tipoFilters={tipoFilters}
+          setTipoFilters={setTipoFilters}
         >
-          <div id="toMain2">
-            <h4 id='plusBoton'>+</h4>
-          </div>
-        </ScrollLink>
-
-        {popupInfo && <Popup {...popupInfo} />}
-
-        <Main2 />
-        <Analisis {...analisisData}/>
+        </Filtros>
+      )}
+      <div id='mapGap'></div>
+      <div id='botonFiltrosMain'>
+        {/* Render different button content based on the state */}
+        <CloseButton
+          id="closeButton"
+          aria-label="Hide"
+          onClick={() => { handleClickCloseButton(); toggleFiltrosVisibility(); }}
+          className={isCloseButtonClicked ? "transformed-button" : "simple-button"}
+        >
+          {isCloseButtonClicked ? (
+            // Content when the button is clicked
+            // You can use any JSX or HTML here
+            <div><h5 id= 'botonFiltrosMap'>FILTROS</h5></div>
+          ) : (
+            // Content when the button is not clicked
+            // You can use any JSX or HTML here
+            <div>X</div>
+          )}
+        </CloseButton>
       </div>
+      <div id='mapGap'></div>
+
+      <Outlet />
+      <div className="slider-container">
+        {/* Agrega un botón o elemento para cambiar la visibilidad de Filtros */}
+        <Slider
+          max={months}
+          valueLabelDisplay="auto"
+          value={monthRange}
+          step={1}
+          getAriaValueText={valueLabelFormat}
+          valueLabelFormat={valueLabelFormat}
+          onChange={handleChange}
+          aria-labelledby="non-linear-slider"
+        />
+        <div id='referenciasFechas'>
+          <div>
+            <h6 id='fechaInicio'>
+              {dates.min.getMonth()}/{dates.min.getFullYear()}
+            </h6>
+          </div>
+          <div>  </div>
+          <div>
+            <h6 id='fechaCierre'>
+              {dates.max.getMonth()}/{dates.max.getFullYear()}
+            </h6>
+          </div>
+        </div>
+      </div>
+      <ScrollLink id='toMain2Container'
+                  to="Main2"             // ID del elemento de destino (Main2)
+                  spy={true}             // Activa el modo espía
+                  smooth={true}          // Activa el desplazamiento suave
+                  duration={500}         // Duración de la animación (en milisegundos)
+                  offset={-70} // Ajusta un offset opcional (si tienes un encabezado fijo)
+      >
+        <div id="toMain2">
+          <h4 id='plusBoton'>+</h4>
+        </div>
+      </ScrollLink>
+
+      {popupInfo && <Popup {...popupInfo} />}
     </AppContext.Provider>
   );
 }
