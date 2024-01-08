@@ -1,8 +1,12 @@
 import React from 'react';
+
+import Carousel from 'react-bootstrap/Carousel';
+import CarouselItem from 'react-bootstrap/CarouselItem';
+
 import './Main2.css'
 import { Link as ScrollLink, animateScroll as scroll } from "react-scroll";
 import { Link } from 'react-router-dom';
-import { Carousel, CarouselItem } from 'react-bootstrap';
+
 import { Details } from './Conecta.jsx'
 
 export default function Main2() {
