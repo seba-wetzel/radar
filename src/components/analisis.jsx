@@ -6,7 +6,7 @@ import { Link as ScrollLink, animateScroll as scroll } from "react-scroll";
 export default function Analisis({min, max, total, tipos, componentes}) {
   return (
     <div id="analisis">
-      <div id='fondoAnalisisImg'> <img src="radarPuntos.png" alt="" /></div>
+      <div id='fondoAnalisisImg'> <img src="/radarPuntos.png" alt="" /></div>
       <div id="analisisHeader">
 
         <div id='analisisTituloSec'>
