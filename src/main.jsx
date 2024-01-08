@@ -5,6 +5,7 @@ import {loader as getURLs} from './components/Loader.jsx';
 import {
   createHashRouter,
   RouterProvider,
+  Navigate
 } from "react-router-dom";
 import "./index.css";
 import "./App.css";
@@ -37,13 +38,14 @@ const router = createHashRouter([
     path: "/",
     element: <Root/>,
     children:[
-      { path:"/", element:<App/>, loader: appLoader, children: [
-        { path:"/", element:<Map/>, loader: mapLoader}
+      { path:"/map", element:<App/>, children: [
+        { path:"/map/:filters?", element:<Map/>, loader: mapLoader}
       ]},
       { path:"/conecta", element:< Conecta/> },
       { path:"/reporta", element:< Reporta/> },
       { path:"/notas", element:< Notas/> },
       { path:"/main2", element:< Main2/> },
+      { path:"/", element: <Navigate to="/map" replace />}
     ]
   },
 ]);
