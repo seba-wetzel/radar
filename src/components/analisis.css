@@ -34,7 +34,7 @@ background-image: url(radarPuntos.png);
 #tituloAnalisisRadar{
     font-size: 1.3rem;
     text-align: left;
-    font-family: 'MiFuenteBold';
+    font-family: 'RadarBold';
     padding-right: 6vw;
     padding-left: 4vw;
     z-index: 2000;
@@ -87,7 +87,7 @@ width: 100vw;
 #enConstruccion{
     font-size: 1.2rem;
     padding-top: 5vh;
-    font-family: 'MiFuente';
+    font-family: 'Radar';
     padding: 0vh 10vw;
     width: 100vw;
 }
@@ -140,7 +140,7 @@ width: 100vw;
     text-align: justify;
     padding: 0vh 1vw;
     text-transform: uppercase;
-    font-family: 'MiFuente';
+    font-family: 'Radar';
 
 }
 
@@ -151,7 +151,7 @@ width: 100vw;
     border-bottom: solid;
     width: 50vw;
     border-width: 0.5vh;
-    font-family: 'MiFuenteBold';
+    font-family: 'RadarBold';
 
     
 }

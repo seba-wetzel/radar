@@ -1,5 +1,5 @@
 #negritaTitulo{
-    font-family: 'MiFuenteBold';
+    font-family: 'RadarBold';
     padding-right: 10px;
 }
 
@@ -106,7 +106,7 @@ padding: 15px;
     padding: 6vh 6vw;
     color: white;text-transform: uppercase;
  text-align: center;
-    font-family: 'MiFuente';
+    font-family: 'Radar';
     font-size: 0.8rem;
 
 border-radius: 30px;
@@ -148,7 +148,7 @@ padding: 0vh 4vw;
     color: white;
     font-size: 1.2rem;
     text-align: justify;
-    font-family: 'MiFuente';
+    font-family: 'Radar';
 }
 
 #textConecta2{
@@ -205,7 +205,7 @@ padding: 0vh 4vw;
     color: white;
     font-size: 1.2rem;
     text-align: justify;
-    font-family: 'MiFuente';
+    font-family: 'Radar';
 }
 
 
