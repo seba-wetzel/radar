@@ -66,9 +66,7 @@ const style = {
 };
 
 export default function Map() {
-    const {urls} = useLoaderData();
-    const {provincias, departamentos, departamentosBsAs, rutas} = urls;
-
+    const {provincias, departamentos, departamentosBsAs, rutas} = useLoaderData();
 
     return (
         <AppContext.Consumer>

@@ -21,13 +21,18 @@ export default function Loader({urls, children }) {
     return `Loading... ${loaded}/${count}`
 }
 
+export const json = async (url) => await fetch(url)
+    .then(async r => await r.json())
+
 export async function loader(urls) {
-    const data = {};
-    for (let [k, u] of Object.entries(urls)) {
-        await fetch(u)
-        .then(async r => {
-            data[k] = await r.json()
-        })
-    }
-    return data;
+    return Promise.all(Object.values(urls).map(json))
+                  .then(res =>  {
+                      const data = {};
+                      const keys = Object.keys(urls);
+                      for (let k in keys) {
+                          data[keys[k]] = res[k]
+                      }
+                      return data
+                  })
+    ;
 }
