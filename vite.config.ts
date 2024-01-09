@@ -6,14 +6,6 @@ import { VitePWA } from 'vite-plugin-pwa'
 export default defineConfig({
     plugins: [
         react(),
-        VitePWA({
-            registerType: 'autoUpdate',
-            manifest: {
-                name: 'RADAR (Registro de Ataques de Derechas Argentinas Radicalizadas)',
-                short_name: 'RADAR',
-                theme_color: '#ffffff'
-            }
-        })
     ],
     base: './',
     build: {
