@@ -9,7 +9,7 @@ export default defineConfig({
     ],
     base: './',
     build: {
-        outDir: 'build',
+        outDir: 'dist',
         sourcemap: false,
         modulePreload: {
             resolveDependencies: (url, deps, context) => {

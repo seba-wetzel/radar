@@ -10,6 +10,11 @@ on:
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to run tests against'
+        type: environment
+        required: true
 
 # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
 permissions:
@@ -33,14 +38,14 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     environment:
-      name: ${{ env.BRANCH_NAME == 'datav2' && 'github-pages' || 'test' }}
+      name: ${{ github.ref_name == 'datav2' && 'github-pages' || 'test' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: "16"
+          node-version: "20"
           cache: npm
           cache-dependency-path: ${{ env.BUILD_PATH }}/package-lock.json
       - name: Setup Pages
@@ -60,7 +65,7 @@ jobs:
 
   deploy:
     environment:
-      name: ${{ env.BRANCH_NAME == 'datav2' && 'github-pages' || 'test' }}
+      name: ${{ github.ref_name == 'datav2' && 'github-pages' || 'test' }}
       url: ${{ steps.deployment.outputs.page_url }}
     needs: build
     runs-on: ubuntu-latest
