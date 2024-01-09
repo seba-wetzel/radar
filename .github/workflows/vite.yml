@@ -7,12 +7,6 @@ on:
   push:
     branches: ["datav2"]
   pull_request:
-  workflow_call:
-    inputs:
-      environment:
-        required: true
-        type: environment
-        default: github-pages
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -31,6 +25,7 @@ concurrency:
 
 env:
   BUILD_PATH: "." # default value when not using subfolders
+  BRANCH_NAME: ${{ github.head_ref || github.ref_name }}
   # BUILD_PATH: subfolder
 
 jobs:
@@ -38,14 +33,14 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     environment:
-      name: ${{ format('{0}', github.event_name == 'pull_request' && 'test' || 'github-pages') }}
+      name: ${{ env.BRANCH_NAME == 'datav2' && 'github-pages' || 'test' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: "21"
+          node-version: "16"
           cache: npm
           cache-dependency-path: ${{ env.BUILD_PATH }}/package-lock.json
       - name: Setup Pages
@@ -55,28 +50,22 @@ jobs:
         run: npm install
         working-directory: ${{ env.BUILD_PATH }}
       - name: Build with npm
-        env:
-          VITE_TSV_ID: ${{ secrets.VITE_TSV_ID}}
         run: |
-         npm run build && cat public/data/casos.json
+         npm run build 
         working-directory: ${{ env.BUILD_PATH }}
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v2
         with:
           path: ${{ env.BUILD_PATH }}/dist
 
   deploy:
-    needs: build
-    # Grant GITHUB_TOKEN the permissions required to make a Pages deployment
-    permissions:
-      pages: write      # to deploy to Pages
-      id-token: write   # to verify the deployment originates from an appropriate source
     environment:
-      name: ${{ format('{0}', github.event_name == 'pull_request' && 'test' || 'github-pages') }}
+      name: ${{ env.BRANCH_NAME == 'datav2' && 'github-pages' || 'test' }}
       url: ${{ steps.deployment.outputs.page_url }}
+    needs: build
     runs-on: ubuntu-latest
     name: Deploy
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v2
