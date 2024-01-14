@@ -31,22 +31,40 @@ class Classifier {
     }
 
     clasify (ids, names, i) {
+        for (let k in ids) {
+            const id = this.mangle(ids[k])
+            if (ids.length == 1) {
+                const oldName = this.idMap?.[id]
+                if (oldName && (oldName != names[k])) {
+                    console.error(`${i}: error in idMap:
+ ${id} was '${oldName}' now wants to be '${names[k]}'`)
 
-            for (let id of ids) {
-                id = thismangle(id)
-                this.byId[id] = [...(this.byId[id] || []), i]
+                } else {
+                    this.idMap = {...(this.idMap || {}), [id]: names[k]}
+                }
             }
 
-            for (let name of names) {
-                name = mangle(name)
-                this.byName[name] = [...(this.byName[name] || []), i]
+            this.byId[id] = [...(this.byId[id] || []), i]
+        }
+
+        for (let k in names) {
+            const name = this.mangle(names[k])
+            if (names.length == 1) {
+                const oldId = this.nameMap?.[name]
+                if (oldId && (oldId != ids[k])) {
+                    console.error(`${i}: error in nameMap:
+ ${name} was '${oldId}' now wants to be '${ids[k]}'`)
+                } else {
+                    this.nameMap = {...(this.nameMap || {}), [name]: ids[k]}
+                }
             }
+
+            this.byName[name] = [...(this.byName[name] || []), i]
         }
     }
 }
 
 export const fetchTSV = async (url = constants.tsvUrl) => {
-    const config = {};
     const resp = await fetch(url);
     const cases = []
     const tipos = new Classifier(FIXUP)
